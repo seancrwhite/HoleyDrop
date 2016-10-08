@@ -1,0 +1,11 @@
+{
+    "folders":
+    [
+        {"follow_symlinks": true,
+            "path": "path\\HoleyDrop",
+            "file_exclude_patterns": ["*.dll","*.meta","*.csproj", "*.booproj", "*.unityproj"],
+            "folder_include_patterns": ["Assets", "Assets/*"]
+        }
+    ],
+    "solution_file": "path\\HoleyDrop\\HoleyDrop.sln"
+}
