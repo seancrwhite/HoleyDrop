@@ -5,14 +5,17 @@ public class CollisionState : MonoBehaviour {
 
     public LayerMask collisionLayer;
     public bool standing;
-    public Vector2 bottomPosition = Vector2.zero;
-    public Vector2 rightPosition = Vector2.zero;
-    public Vector2 leftPosition = Vector2.zero;
-    public float collisionRadius = 10f;
-    public Color debugCollisionColor = Color.red;
+    public bool fisting;
+
+    public float bottomOffset = 0f;
+    public float bottomRadius = 0.1f;
+
+    public float middleOffset = -0.11f;
+    public float middleRadius = 0.6f;
 
     private InputState inputState;
     private Cylindrical cyln;
+
 
     private void Awake(){
         inputState = GetComponent<InputState>();
@@ -20,31 +23,22 @@ public class CollisionState : MonoBehaviour {
     }
 
     private void FixedUpdate(){
+        standing = Physics2D.OverlapCircle(
+            Cylindrical.ToCartesian(
+                new Vector2(cyln.theta, cyln.radius + bottomOffset)
+            ),
+            bottomRadius,
+            collisionLayer
+        );
 
-        var pos = bottomPosition;
-        pos.x += transform.position.x;
-        pos.y += transform.position.y;
-
-        standing = Physics2D.OverlapCircle(pos, collisionRadius, collisionLayer);
-
-        pos = inputState.direction == Directions.Right ? rightPosition : leftPosition;
-        pos.x += transform.position.x;
-        pos.y += transform.position.y;
+        fisting = Physics2D.OverlapCircle(
+            Cylindrical.ToCartesian(
+                new Vector2(cyln.theta, cyln.radius + middleOffset)
+            ),
+            middleRadius,
+            collisionLayer
+        );
 
     }
 
-    private void OnDrawGizmos(){
-        Gizmos.color = debugCollisionColor;
-
-        // var positions = new Vector2[]{rightPosition, bottomPosition, leftPosition, upPosition};
-        var positions = new Vector2[]{rightPosition, bottomPosition, leftPosition};
-
-        foreach(var position in positions){
-            var pos = position;
-            pos.x += transform.position.x;
-            pos.y += transform.position.y;
-
-            Gizmos.DrawWireSphere(pos, collisionRadius);
-        }
-    }
 }

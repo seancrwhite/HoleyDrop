@@ -11,13 +11,15 @@ public class Cylindrical : MonoBehaviour {
     public static float rotationOffset = 0f;
 
     private float normalizer = 45f;
+    private CollisionState collisionState;
+
+    private void Awake(){
+        collisionState = GetComponent<CollisionState>();
+    }
 
     private void FixedUpdate(){
-        // var absVelR = Mathf.Abs(velocity_r);
         var absVelT = Mathf.Abs(velocity_t);
 
-        //if(absVelR < 0.1f) velocity_r = 0f;
-        //else velocity_r -= velocity_r * drag;
 
         if(absVelT < 0.1f) velocity_t = 0f;
         else velocity_t -= velocity_t * drag;
@@ -27,26 +29,40 @@ public class Cylindrical : MonoBehaviour {
         else
             radius = 0;
 
-        radius += velocity_r;
+        if(!collisionState.standing) radius += velocity_r;
+        else {
+            velocity_r = 0;
+            radius += 0.01f;
+        }
+
         theta  += velocity_t / (normalizer * Mathf.PI);
-        ToCartesian();
+
+        CorrectRotation();
+        var coords = ToCartesian(new Vector2(theta, radius));
+        transform.position = new Vector3(coords.x, coords.y, transform.position.z);
     }
 
-    private void ToCartesian(){
-       transform.position = new Vector3( radius * Mathf.Cos( theta + (Mathf.PI / 2f)), radius * Mathf.Sin( theta + (Mathf.PI / 2f)), transform.position.z );
-       transform.eulerAngles = new Vector3(0, 0, 180 / Mathf.PI * theta + rotationOffset);
+    public static Vector2 ToCartesian(Vector2 cylindrical){
+       return new Vector2( cylindrical.y * Mathf.Cos( cylindrical.x + (Mathf.PI / 2f)), cylindrical.y * Mathf.Sin( cylindrical.x + (Mathf.PI / 2f)));
+
     }
 
-    private void ToCylinder(){
-       radius = Mathf.Sqrt( transform.position.x * transform.position.x + transform.position.y * transform.position.y );
+    private void CorrectRotation(){
+      transform.eulerAngles = new Vector3(0, 0, 180 / Mathf.PI * theta + rotationOffset);
+    }
 
-       if( transform.position.x == 0 && transform.position.y == 0 ){
-          theta = 0;
-       }else if( transform.position.x >= 0 ){
-          theta = Mathf.Asin( transform.position.y / radius );
-       }else if( transform.position.x < 0 ){
-          theta = -Mathf.Asin( transform.position.y / radius ) + Mathf.PI;
-       }
+    public static Vector2 ToCylinder(Vector2 cartesian){
+        var radius = Mathf.Sqrt( cartesian.x * cartesian.x + cartesian.y * cartesian.y );
+
+        var theta = 0f;
+        if( cartesian.x == 0 && cartesian.y == 0 ){
+            theta = 0f;
+        }else if( cartesian.x >= 0 ){
+            theta = Mathf.Asin( cartesian.y / radius );
+        }else if( cartesian.x < 0 ){
+            theta = -Mathf.Asin( cartesian.y / radius ) + Mathf.PI;
+        }
+        return new Vector2(theta, radius);
     }
 
 }
