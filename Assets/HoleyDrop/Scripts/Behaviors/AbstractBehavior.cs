@@ -8,12 +8,10 @@ public abstract class AbstractBehavior : MonoBehaviour {
 
     protected InputState inputState;
     protected Cylindrical cyln;
-    protected CollisionState collisionState;
 
     protected virtual void Awake(){
         inputState = GetComponent<InputState>() ;
         cyln = GetComponent<Cylindrical>() ;
-        collisionState = GetComponent<CollisionState>() ;
     }
 
     protected virtual void ToggleScripts(bool value){

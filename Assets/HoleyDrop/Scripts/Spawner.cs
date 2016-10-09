@@ -18,7 +18,6 @@ public class Spawner : MonoBehaviour {
 
         if(active){
             var newTransform = transform.position;
-
             GameObjectUtil.Instantiate(groundPrefab, newTransform);
             ResetDelay();
         }
@@ -28,4 +27,5 @@ public class Spawner : MonoBehaviour {
     private void ResetDelay(){
         delay = Random.Range(delayRange.x, delayRange.y);
     }
+
 }

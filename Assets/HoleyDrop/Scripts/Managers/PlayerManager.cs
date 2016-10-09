@@ -7,18 +7,18 @@ public class PlayerManager : MonoBehaviour {
 
     private InputState inputState;
     private Animator animator;
-    private CollisionState collisionState;
+    private StandingState standingState;
 
     private void Awake(){
         inputState = GetComponent<InputState>();
         // animator = GetComponent<Animator>();
-        collisionState = GetComponent<CollisionState>();
+        standingState = GetComponent<StandingState>();
 
     }
 
 	// Update is called once per frame
 	private void Update () {
-        if (collisionState.standing){
+        if (standingState.standing){
             animState = 0;
         }
 
