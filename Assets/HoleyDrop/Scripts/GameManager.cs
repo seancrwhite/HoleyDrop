@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
         score = 0;
         highScore = PlayerPrefs.GetInt("High Score");
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
         text.text = "Score: " + score++;

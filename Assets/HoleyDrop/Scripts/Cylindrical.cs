@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class Cylindrical : MonoBehaviour {
@@ -23,14 +24,14 @@ public class Cylindrical : MonoBehaviour {
         if(absVelT < 0.1f) velocity_t = 0f;
         else velocity_t -= velocity_t * drag;
 
-        if(radius > 0)
+        if(radius > 0){
             velocity_r -= gravity / 1000f;
-            if(radius > boundryLimit)
-                // Load lose scene
-        else{
+            if(radius > boundryLimit){
+            }
+        }else{
             theta = 0f;
             velocity_r = 0;
-            // Load lose scene
+            SceneManager.LoadScene("GameOverScreen");
         }
 
         theta  += velocity_t / (normalizer * Mathf.PI);
