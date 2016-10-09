@@ -7,23 +7,25 @@ public class Cylindrical : MonoBehaviour {
     public float velocity_r = 0f;
     public float velocity_t = 0f;
     public float drag = 0.05f;
+    public float gravity = 5f;
     public static float rotationOffset = 0f;
 
     private float normalizer = 45f;
 
-    private void Awake(){
-        // ToCylinder();
-    }
-
     private void FixedUpdate(){
-        var absVelR = Mathf.Abs(velocity_r);
+        // var absVelR = Mathf.Abs(velocity_r);
         var absVelT = Mathf.Abs(velocity_t);
 
-        if(absVelR < 0.1f) velocity_r = 0f;
-        else velocity_r -= velocity_r * drag;
+        //if(absVelR < 0.1f) velocity_r = 0f;
+        //else velocity_r -= velocity_r * drag;
 
         if(absVelT < 0.1f) velocity_t = 0f;
         else velocity_t -= velocity_t * drag;
+
+        if(radius > 0)
+            velocity_r -= gravity / 1000f;
+        else
+            radius = 0;
 
         radius += velocity_r;
         theta  += velocity_t / (normalizer * Mathf.PI);
@@ -32,7 +34,7 @@ public class Cylindrical : MonoBehaviour {
 
     private void ToCartesian(){
        transform.position = new Vector3( radius * Mathf.Cos( theta + (Mathf.PI / 2f)), radius * Mathf.Sin( theta + (Mathf.PI / 2f)), transform.position.z );
-       // transform.Rotate(Vector3.forward * (theta + rotationOffset));
+       transform.eulerAngles = new Vector3(0, 0, 180 / Mathf.PI * theta + rotationOffset);
     }
 
     private void ToCylinder(){
