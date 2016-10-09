@@ -7,4 +7,9 @@ public class MenuController : MonoBehaviour {
     {
         SceneManager.LoadScene(name);
     }
+
+    public void DestroyMusicManager()
+    {
+        Destroy(MusicManager.Instance.gameObject);
+    }
 }
